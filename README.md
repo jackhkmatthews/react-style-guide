@@ -45,7 +45,7 @@ _A mostly reasonable approach to React and JSX_
 5. render
    1. try and keep all JSX definitions in a single returned value. This includes returning `null` . Don't store JSX in variables higher up, just define them in the final render.
 
-```jsx
+```tsx
 // Bad
 function MyComponent(props) {
   
@@ -53,7 +53,7 @@ function MyComponent(props) {
   
   const companies = query.data.companies.filter(haveOwners)
 
-  const listItems = companies.map(comp => <li>{comp.name}</li>
+  const listItems = companies.map(comp => <li>{comp.name}</li>)
   
   function handleFollow(e, companyName) {
     trackEvent(e, companyName)
@@ -63,7 +63,9 @@ function MyComponent(props) {
  
   return <ul>{listItems}<ul>
 }
+```
 
+```tsx
 // Good
 function MyComponent(props) {
   const [isOpen, setIsOpen] = useSate(false)
@@ -75,8 +77,6 @@ function MyComponent(props) {
     trackEvent(e, companyName)
   }
  
-  return <ul>{companies.map(comp => <li>{comp.name}</li>}<ul>
+  return <ul>{companies.map(comp => <li>{comp.name}</li>)}<ul>
 }
 ```
-
-**[⬆ back to top](#table-of-contents)**

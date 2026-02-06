@@ -1,81 +1,21 @@
-# Airbnb React/JSX Style Guide
+# React/JSX Style Guide
 
 _A mostly reasonable approach to React and JSX_
-
-This style guide is mostly based on the standards that are currently prevalent in JavaScript, although some conventions (i.e async/await or static class fields) may still be included or prohibited on a case-by-case basis. Currently, anything prior to stage 3 is not included nor recommended in this guide.
 
 ## Table of Contents
 
 1. [Basic Rules](#basic-rules)
-2. [Class vs `React.createClass` vs stateless](#class-vs-reactcreateclass-vs-stateless)
-3. [Mixins](#mixins)
-4. [Naming](#naming)
-5. [Declaration](#declaration)
-6. [Alignment](#alignment)
-7. [Quotes](#quotes)
-8. [Spacing](#spacing)
-9. [Props](#props)
-10. [Refs](#refs)
-11. [Parentheses](#parentheses)
-12. [Tags](#tags)
-13. [Methods](#methods)
-14. [Ordering](#ordering)
-15. [`isMounted`](#ismounted)
+2. [Naming](#naming)
+3. [Declaration](#declaration)
+4. [Props](#props)
+5. [Refs](#refs)
+6. [Methods](#methods)
+7. [Ordering](#ordering)
 
 ## Basic Rules
 
-- Only include one React component per file.
-  - However, multiple [Stateless, or Pure, Components](https://facebook.github.io/react/docs/reusable-components.html#stateless-functions) are allowed per file. eslint: [`react/no-multi-comp`](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-multi-comp.md#ignorestateless).
-- Always use JSX syntax.
-- Do not use `React.createElement` unless you’re initializing the app from a file that is not JSX.
-- [`react/forbid-prop-types`](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/forbid-prop-types.md) will allow `arrays` and `objects` only if it is explicitly noted what `array` and `object` contains, using `arrayOf`, `objectOf`, or `shape`.
-
-## Class vs `React.createClass` vs stateless
-
-- If you have internal state and/or refs, prefer `class extends React.Component` over `React.createClass`. eslint: [`react/prefer-es6-class`](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/prefer-es6-class.md) [`react/prefer-stateless-function`](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/prefer-stateless-function.md)
-
-  ```jsx
-  // bad
-  const Listing = React.createClass({
-    // ...
-    render() {
-      return <div>{this.state.hello}</div>;
-    },
-  });
-
-  // good
-  class Listing extends React.Component {
-    // ...
-    render() {
-      return <div>{this.state.hello}</div>;
-    }
-  }
-  ```
-
-  And if you don’t have state or refs, prefer normal functions (not arrow functions) over classes:
-
-  ```jsx
-  // bad
-  class Listing extends React.Component {
-    render() {
-      return <div>{this.props.hello}</div>;
-    }
-  }
-
-  // bad (relying on function name inference is discouraged)
-  const Listing = ({ hello }) => <div>{hello}</div>;
-
-  // good
-  function Listing({ hello }) {
-    return <div>{hello}</div>;
-  }
-  ```
-
-## Mixins
-
-- [Do not use mixins](https://facebook.github.io/react/blog/2016/07/13/mixins-considered-harmful.html).
-
-> Why? Mixins introduce implicit dependencies, cause name clashes, and cause snowballing complexity. Most use cases for mixins can be accomplished in better ways via components, higher-order components, or utility modules.
+- Only include one React component per file. *Mostly*.
+- Always use TSX syntax.
 
 ## Naming
 
@@ -166,123 +106,6 @@ This style guide is mostly based on the standards that are currently prevalent i
   export default class ReservationCard extends React.Component {
   }
   ```
-
-## Alignment
-
-- Follow these alignment styles for JSX syntax. eslint: [`react/jsx-closing-bracket-location`](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-closing-bracket-location.md) [`react/jsx-closing-tag-location`](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-closing-tag-location.md)
-
-  ```jsx
-  // bad
-  <Foo superLongParam="bar"
-       anotherSuperLongParam="baz" />
-
-  // good
-  <Foo
-    superLongParam="bar"
-    anotherSuperLongParam="baz"
-  />
-
-  // if props fit in one line then keep it on the same line
-  <Foo bar="bar" />
-
-  // children get indented normally
-  <Foo
-    superLongParam="bar"
-    anotherSuperLongParam="baz"
-  >
-    <Quux />
-  </Foo>
-
-  // bad
-  {showButton &&
-    <Button />
-  }
-
-  // bad
-  {
-    showButton &&
-      <Button />
-  }
-
-  // good
-  {showButton && (
-    <Button />
-  )}
-
-  // good
-  {showButton && <Button />}
-
-  // good
-  {someReallyLongConditional
-    && anotherLongConditional
-    && (
-      <Foo
-        superLongParam="bar"
-        anotherSuperLongParam="baz"
-      />
-    )
-  }
-
-  // good
-  {someConditional ? (
-    <Foo />
-  ) : (
-    <Foo
-      superLongParam="bar"
-      anotherSuperLongParam="baz"
-    />
-  )}
-  ```
-
-## Quotes
-
-- Always use double quotes (`"`) for JSX attributes, but single quotes (`'`) for all other JS. eslint: [`jsx-quotes`](https://eslint.org/docs/rules/jsx-quotes)
-
-  > Why? Regular HTML attributes also typically use double quotes instead of single, so JSX attributes mirror this convention.
-  >
-
-  ```jsx
-  // bad
-  <Foo bar='bar' />
-
-  // good
-  <Foo bar="bar" />
-
-  // bad
-  <Foo style={{ left: "20px" }} />
-
-  // good
-  <Foo style={{ left: '20px' }} />
-  ```
-
-## Spacing
-
-- Always include a single space in your self-closing tag. eslint: [`no-multi-spaces`](https://eslint.org/docs/rules/no-multi-spaces), [`react/jsx-tag-spacing`](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-tag-spacing.md)
-
-  ```jsx
-  // bad
-  <Foo/>
-
-  // very bad
-  <Foo                 />
-
-  // bad
-  <Foo
-   />
-
-  // good
-  <Foo />
-  ```
-- Do not pad JSX curly braces with spaces. eslint: [`react/jsx-curly-spacing`](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-curly-spacing.md)
-
-  ```jsx
-  // bad
-  <Foo bar={ baz } />
-
-  // good
-  <Foo bar={baz} />
-  ```
-
 ## Props
 
 - Always use camelCase for prop names, or PascalCase if the prop value is a React component.
@@ -497,60 +320,6 @@ render() {
   />
   ```
 
-## Parentheses
-
-- Wrap JSX tags in parentheses when they span more than one line. eslint: [`react/jsx-wrap-multilines`](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-wrap-multilines.md)
-
-  ```jsx
-  // bad
-  render() {
-    return <MyComponent variant="long body" foo="bar">
-             <MyChild />
-           </MyComponent>;
-  }
-
-  // good
-  render() {
-    return (
-      <MyComponent variant="long body" foo="bar">
-        <MyChild />
-      </MyComponent>
-    );
-  }
-
-  // good, when single line
-  render() {
-    const body = <div>hello</div>;
-    return <MyComponent>{body}</MyComponent>;
-  }
-  ```
-
-## Tags
-
-- Always self-close tags that have no children. eslint: [`react/self-closing-comp`](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/self-closing-comp.md)
-
-  ```jsx
-  // bad
-  <Foo variant="stuff"></Foo>
-
-  // good
-  <Foo variant="stuff" />
-  ```
-- If your component has multiline properties, close its tag on a new line. eslint: [`react/jsx-closing-bracket-location`](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-closing-bracket-location.md)
-
-  ```jsx
-  // bad
-  <Foo
-    bar="bar"
-    baz="baz" />
-
-  // good
-  <Foo
-    bar="bar"
-    baz="baz"
-  />
-  ```
-
 ## Methods
 
 - Use arrow functions to close over local variables. It is handy when you need to pass additional data to an event handler. Although, make sure they [do not massively hurt performance](https://www.bignerdranch.com/blog/choosing-the-best-approach-for-react-event-handlers/), in particular when passed to custom components that might be PureComponents, because they will trigger a possibly needless rerender every time.
@@ -704,22 +473,5 @@ function MyComponent(props) {
   return <ul>{companies.map(comp => <li>{comp.name}</li>}<ul>
 }
 ```
-
-## Translation
-
-This JSX/React style guide is also available in other languages:
-
-- ![cn](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/China.png) **Chinese (Simplified)**: [jhcccc/javascript](https://github.com/jhcccc/javascript/tree/master/react)
-- ![tw](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Taiwan.png) **Chinese (Traditional)**: [jigsawye/javascript](https://github.com/jigsawye/javascript/tree/master/react)
-- ![es](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Spain.png) **Español**: [agrcrobles/javascript](https://github.com/agrcrobles/javascript/tree/master/react)
-- ![jp](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Japan.png) **Japanese**: [mitsuruog/javascript-style-guide](https://github.com/mitsuruog/javascript-style-guide/tree/master/react)
-- ![kr](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/South-Korea.png) **Korean**: [apple77y/javascript](https://github.com/apple77y/javascript/tree/master/react)
-- ![pl](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Poland.png) **Polish**: [pietraszekl/javascript](https://github.com/pietraszekl/javascript/tree/master/react)
-- ![Br](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Brazil.png) **Portuguese**: [ronal2do/javascript](https://github.com/ronal2do/airbnb-react-styleguide)
-- ![ru](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Russia.png) **Russian**: [leonidlebedev/javascript-airbnb](https://github.com/leonidlebedev/javascript-airbnb/tree/master/react)
-- ![th](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Thailand.png) **Thai**: [lvarayut/javascript-style-guide](https://github.com/lvarayut/javascript-style-guide/tree/master/react)
-- ![tr](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Turkey.png) **Turkish**: [alioguzhan/react-style-guide](https://github.com/alioguzhan/react-style-guide)
-- ![ua](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Ukraine.png) **Ukrainian**: [ivanzusko/javascript](https://github.com/ivanzusko/javascript/tree/master/react)
-- ![vn](https://raw.githubusercontent.com/gosquared/flags/master/flags/flags/shiny/24/Vietnam.png) **Vietnam**: [uetcodecamp/jsx-style-guide](https://github.com/UETCodeCamp/jsx-style-guide)
 
 **[⬆ back to top](#table-of-contents)**
